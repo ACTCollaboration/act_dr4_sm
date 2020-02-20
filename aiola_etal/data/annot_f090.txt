@@ -1,0 +1,17 @@
+text  -3.0  16 0 0 "D56"    24 white
+text  -41    3 0 0 "D8"     24 white
+text    8 -150 0 0 "BN"     24 white
+text    8  140 0 0 "BN"     24 white
+text  -33   40 0 0 "AA"     24 white
+text   2.0  16 0 0 "16"     16 white
+text  -6.0  30 0 0 "20"     16 white
+text  -6.8  43 0 0 "25"     16 white
+text  -48    7 0 0 "20"     16 white
+text   12  163 0 0 "32"     16 white
+text   -1  130 0 0 "40"     16 white
+text    9 -119 0 0 "32"     16 white
+text -49.0   50.5 0 0  "64"    16 white
+text -28.0   80.0 0 0  "80"    16 white
+text -16.5   83.0 0 0 "100"    16 white
+text   3.0   60.0 0 0  "80"    16 white
+text  -3.0  -40.0 0 0 ">100"   16 white
