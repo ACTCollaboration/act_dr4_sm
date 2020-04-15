@@ -1,0 +1,15 @@
+text  -3.7  35 0 0 "D6"     24 white
+text   1.0  -3 0 0 "D5"     24 white
+text  -1.5  16 0 0 "D56"    24 white
+text  -41    3 0 0 "D8"     24 white
+text   1.0 151 0 0 "D1"     24 white
+text    4 -130 0 0 "BN"     24 white
+text  7  325 0 0 "w0"     24 white
+text   -13  -30 0 0 "w1"     24 white
+text   -25  -25 0 0 "w2"     24 white
+text   -35  -25 0 0 "w3"     24 white
+text   -48  345 0 0 "w4"     24 white
+text   -57  -22 0 0 "w5"     24 white
+text   17  120 0 0 "w6"     24 white
+text   15  139 0 0 "w7"     24 white
+text   2  139 0 0 "w8"     24 white
