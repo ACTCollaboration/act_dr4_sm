@@ -1,0 +1,125 @@
+#!/usr/bin/env python
+
+import matplotlib as mpl
+from matplotlib import rc
+
+rc('text', usetex=True)
+mpl.use('Agg')
+
+import numpy as np
+import pylab
+
+# Set the paths
+
+beamdir = '/home/mlungu/depots/mlungu/Beams/190809/'
+plotdir = 'plots/'
+
+# Set the filenames
+
+fnpre = 'b20190809_'
+fnext = '_nohwp_night_beam_tform_instant_cmbspec.txt'
+
+tags = ['s13_pa1_f150','s14_pa1_f150','s15_pa1_f150', \
+        's14_pa2_f150','s15_pa2_f150','s16_pa2_f150', \
+        's15_pa3_f150','s16_pa3_f150','s15_pa3_f090','s16_pa3_f090']
+
+# Run through everything
+
+fig = mpl.pyplot.figure(figsize = (12,8))
+gs = mpl.gridspec.GridSpec(2, 1, height_ratios=[3, 1])
+
+ax1 = fig.add_subplot(gs[0])
+ax2 = fig.add_subplot(gs[1])
+
+for tag in tags:
+  season,array,band = tag.split('_')
+
+  # Load the data
+
+  data = np.loadtxt(beamdir+fnpre+tag+fnext).T
+  ell, Bell = data[:2,:12001]
+  dBell = data[2:,:12001]
+
+  # Convert to window funciton
+
+  Well = Bell**2
+  dWell = abs(2*Bell*dBell)
+
+  # Apply normalization
+
+  norm = Well[0]
+  Well /= norm
+  dWell /= norm
+
+  # Get the diagonal of the covariance matrix
+
+  delta_Bell = np.sqrt(np.einsum('ij,ij->j',dBell,dBell))
+  delta_Well = np.sqrt(np.einsum('ij,ij->j',dWell,dWell))
+
+  # Get the solid angle + uncertainty in nsr
+
+  Omega = 2*np.pi*Bell[0]*1E9
+  delta_Omega = 2*np.pi*delta_Bell[0]*1E9
+
+  # Set the plot formats
+
+  fmt = ''
+
+  if array == 'pa1':
+    fmt += 'b'
+  elif array == 'pa2':
+    fmt += 'g'
+  elif array == 'pa3':
+    if band == 'f150':
+      fmt += 'r'
+    elif band == 'f090':
+      fmt += 'm'
+
+  if season == 's13':
+    fmt += ':'
+  elif season == 's14':
+    fmt += '--'
+  elif season == 's15':
+    fmt += '-'
+  elif season == 's16':
+    fmt += '-.'
+
+  # Set the plot labels
+
+  if band == 'f150':
+    freq = '150 GHz'
+  elif band == 'f090':
+    freq = '98 GHz'
+
+  label = r'\rm{%s}' %(season.upper()+' '+array.upper()+' '+freq) + '\n'
+  label += r'\rm{$\Omega = %.1f \pm %.1f$ nsr}' %(Omega, delta_Omega)
+
+  # Plot the data
+
+  ax1.plot(ell,Well,fmt,label = label)
+  ax2.plot(ell,delta_Well/Well*100,fmt)
+
+ax1.set_ylabel(r'\rm{$B_{\ell}^2$ (Normalized)}', fontsize = 16)
+ax1.tick_params(axis = 'x', bottom = 'off', labelbottom = 'off')
+ax1.tick_params(labelsize = 16)
+ax1.grid('on', ls = '--')
+
+ax1.set_xlim(0,12000)
+ax1.set_ylim(0,1)
+
+ax1.legend(labelspacing = 1.2, fontsize = 10)
+
+ax2.set_xlim(0,12000)
+ax2.set_ylim(0.03,30)
+ax2.set_yscale('log')
+
+ax2.set_xlabel(r'\rm{Multipole Moment $\ell$}', fontsize = 16)
+ax2.set_ylabel(r'\rm{$\delta B_{\ell}^2 / B_{\ell}^2 \, (\%)$}', fontsize = 16)
+
+ax2.yaxis.set_major_formatter(mpl.ticker.FormatStrFormatter(r'\rm{%.1f}'))
+ax2.tick_params(labelsize = 16)
+ax2.grid('on', ls = '--')
+
+fig.tight_layout()
+fig.savefig(plotdir+'dr4_instant_beam_windows.png', dpi = 100)
+mpl.pyplot.close(fig)
